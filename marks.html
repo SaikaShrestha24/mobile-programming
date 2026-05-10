@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Result Calculator</title>
+</head>
+<body>
+
+    <h2>Enter Marks of 8 Subjects</h2>
+
+    English: <input type="text" id="english"><br><br>
+    Math: <input type="text" id="math"><br><br>
+    Science: <input type="text" id="science"><br><br>
+    Computer: <input type="text" id="computer"><br><br>
+    Social: <input type="text" id="social"><br><br>
+    Nepali: <input type="text" id="nepali"><br><br>
+    Account: <input type="text" id="account"><br><br>
+    Economics: <input type="text" id="economics"><br><br>
+
+    <button onclick="calculateResult()">Submit</button>
+
+    <h2 id="total"></h2>
+    <h2 id="result"></h2>
+
+    <script>
+
+        function calculateResult() {
+
+            let english = Number(document.getElementById('english').value);
+            let math = Number(document.getElementById('math').value);
+            let science = Number(document.getElementById('science').value);
+            let computer = Number(document.getElementById('computer').value);
+            let social = Number(document.getElementById('social').value);
+            let nepali = Number(document.getElementById('nepali').value);
+            let account = Number(document.getElementById('account').value);
+            let economics = Number(document.getElementById('economics').value);
+
+            let totalMarks = english + math + science + computer + social + nepali + account + economics;
+
+            document.getElementById('total').innerHTML = "Total Marks = " + totalMarks;
+
+            if (totalMarks > 700) {
+
+                document.getElementById('result').innerHTML = "Distinction";
+                document.getElementById('result').style.color = "green";
+
+            }
+
+            else if (totalMarks > 600) {
+
+                document.getElementById('result').innerHTML = "First Division";
+                document.getElementById('result').style.color = "green";
+
+            }
+
+            else if (totalMarks >= 500) {
+
+                document.getElementById('result').innerHTML = "Second Division";
+                document.getElementById('result').style.color = "green";
+
+            }
+
+            else if (totalMarks >= 400) {
+
+                document.getElementById('result').innerHTML = "Third Division";
+                document.getElementById('result').style.color = "green";
+
+            }
+
+            else {
+
+                document.getElementById('result').innerHTML = "Fail";
+                document.getElementById('result').style.color = "red";
+
+            }
+
+        }
+
+    </script>
+
+</body>
+</html>
