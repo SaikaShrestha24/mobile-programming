@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ATM System</title>
+</head>
+
+<body>
+
+    <h1>ATM System</h1>
+
+    <h2 id="balance">Bank Balance: 10000</h2>
+
+    <input type="number" id="amount" placeholder="Enter Amount">
+
+    <br><br>
+
+    <button onclick="withdrawal()">Withdraw</button>
+    <button onclick="deposit()">Deposit</button>
+
+    <script>
+
+        let balance = 10000;
+        const pin = 1234;
+
+        function updateBalance() {
+
+            document.getElementById("balance").innerHTML =
+                "Bank Balance: " + balance;
+        }
+
+        function withdrawal() {
+
+            let amount =
+                parseInt(document.getElementById("amount").value);
+
+            if (isNaN(amount)) {
+                alert("Enter amount");
+                return;
+            }
+
+            // Using modulus operator
+            if (amount % 100 != 0) {
+                alert("Amount must be multiple of 100");
+                return;
+            }
+
+            let enteredPin = prompt("Enter your PIN");
+
+            if (enteredPin != pin) {
+                alert("Wrong PIN");
+                return;
+            }
+
+            if (amount > balance) {
+                alert("Insufficient Balance");
+                return;
+            }
+
+            balance = balance - amount;
+
+            updateBalance();
+
+            alert("Withdrawal Successful");
+        }
+
+        function deposit() {
+
+            let amount =
+                parseInt(document.getElementById("amount").value);
+
+            if (isNaN(amount)) {
+                alert("Enter amount");
+                return;
+            }
+
+            // Using modulus operator
+            if (amount % 100 != 0) {
+                alert("Amount must be multiple of 100");
+                return;
+            }
+
+            let enteredPin = prompt("Enter your PIN");
+
+            if (enteredPin != pin) {
+                alert("Wrong PIN");
+                return;
+            }
+
+            balance = balance + amount;
+
+            updateBalance();
+
+            alert("Deposit Successful");
+        }
+
+    </script>
+
+</body>
+
+</html>
