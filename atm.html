@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ATM System using jQuery</title>
+
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- Font Awesome for Eye Icon -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        #amount {
+            display: none;
+            padding: 8px;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+        }
+
+        .eye {
+            font-size: 25px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>ATM System</h1>
+
+    <!-- Balance with Eye Icon -->
+    <h2>
+        Bank Balance:
+        <span id="balance">******</span>
+
+        <i class="fa-solid fa-eye-slash eye" id="toggleEye"></i>
+    </h2>
+
+    <!-- Amount Input -->
+    <input type="number" id="amount" placeholder="Enter Amount">
+
+    <br><br>
+
+    <!-- Buttons -->
+    <button id="withdrawBtn">Withdraw</button>
+    <button id="depositBtn">Deposit</button>
+
+    <script>
+
+        let balance = 10000;
+        let pin = 1234;
+
+        let showBalance = false;
+
+        // Show / Hide Balance
+        $("#toggleEye").click(function () {
+
+            if (showBalance == false) {
+
+                $("#balance").text(balance);
+
+                $("#toggleEye")
+                    .removeClass("fa-eye-slash")
+                    .addClass("fa-eye");
+
+                showBalance = true;
+
+            } else {
+
+                $("#balance").text("******");
+
+                $("#toggleEye")
+                    .removeClass("fa-eye")
+                    .addClass("fa-eye-slash");
+
+                showBalance = false;
+            }
+        });
+
+        // Withdraw Button
+        $("#withdrawBtn").click(function () {
+
+            $("#amount").toggle();
+
+            let amount = parseInt($("#amount").val());
+
+            if (isNaN(amount)) {
+                return;
+            }
+
+            if (amount % 100 != 0) {
+                alert("Amount must be multiple of 100");
+                return;
+            }
+
+            let enteredPin = prompt("Enter PIN");
+
+            if (enteredPin != pin) {
+                alert("Wrong PIN");
+                return;
+            }
+
+            if (amount > balance) {
+                alert("Insufficient Balance");
+                return;
+            }
+
+            balance = balance - amount;
+
+            if (showBalance) {
+                $("#balance").text(balance);
+            }
+
+            alert("Withdrawal Successful");
+        });
+
+        // Deposit Button
+        $("#depositBtn").click(function () {
+
+            $("#amount").toggle();
+
+            let amount = parseInt($("#amount").val());
+
+            if (isNaN(amount)) {
+                return;
+            }
+
+            if (amount % 100 != 0) {
+                alert("Amount must be multiple of 100");
+                return;
+            }
+
+            let enteredPin = prompt("Enter PIN");
+
+            if (enteredPin != pin) {
+                alert("Wrong PIN");
+                return;
+            }
+
+            balance = balance + amount;
+
+            if (showBalance) {
+                $("#balance").text(balance);
+            }
+
+            alert("Deposit Successful");
+        });
+
+    </script>
+
+</body>
+
+</html>
