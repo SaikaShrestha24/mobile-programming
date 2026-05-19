@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>4 Corner Animation</title>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+  <script>
+    $(document).ready(function () {
+
+      $("button").click(function () {
+
+        var box = $("div");
+
+        // Top Left
+        box.animate({
+          left: '0px',
+          top: '80px',
+          opacity: '0.3'
+        }, "slow", function () {
+
+          $(this).css("background-color", "red");
+
+          // Top Right
+          $(this).animate({
+            left: '500px',
+            opacity: '0.8'
+          }, "slow", function () {
+
+            $(this).css("background-color", "blue");
+
+            // Bottom Right
+            $(this).animate({
+              top: '350px',
+              opacity: '0.3'
+            }, "slow", function () {
+
+              $(this).css("background-color", "green");
+
+              // Bottom Left
+              $(this).animate({
+                left: '0px',
+                opacity: '0.8'
+              }, "slow", function () {
+
+                $(this).css("background-color", "orange");
+
+                // Back to Start
+                $(this).animate({
+                  top: '80px',
+                  opacity: '0.5'
+                }, "slow");
+
+              });
+
+            });
+
+          });
+
+        });
+
+      });
+
+    });
+  </script>
+</head>
+
+<body>
+
+  <button style="
+  margin-bottom:20px;
+  padding:10px 20px;
+  font-size:18px;
+">
+  Start Animation
+</button>
+
+<div style="
+  width:150px;
+  height:150px;
+  background:purple;
+  position:absolute;
+  top:80px;
+">
+</div>
+
+</body>
+</html>
