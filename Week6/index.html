@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Firebase Realtime DB Demo</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    input, button { margin: 4px; padding: 6px; }
+    input { width: 160px; }
+    hr { margin: 20px 0; }
+    #read-result { background: #f4f4f4; padding: 10px; border-left: 4px solid #007bff; white-space: pre-wrap; display: none; margin-top: 10px; width: fit-content; }
+  </style>
+</head>
+<body>
+  <h1>Firebase Realtime Database CRUD</h1>
+  
+  <script type="module" src="script.js"></script>
+
+  <h2>Create / Write User (10 Fields)</h2>
+  <input type="text" id="create-id" placeholder="User ID (e.g., 1)" /><br />
+  <input type="text" id="create-username" placeholder="Username" />
+  <input type="text" id="create-password" placeholder="Password" /><br />
+  <input type="text" id="create-gender" placeholder="Gender" />
+  <input type="number" id="create-age" placeholder="Age" /><br />
+  <input type="text" id="create-contact" placeholder="Contact" />
+  <input type="text" id="create-address" placeholder="Address" /><br />
+  <input type="text" id="create-nationality" placeholder="Nationality" />
+  <input type="text" id="create-role" placeholder="Role" /><br />
+  <input type="text" id="create-status" placeholder="Status (Active/Inactive)" /><br />
+  
+  <button onclick="handleWriteUser()">Write User</button>
+
+  <hr />
+
+  <h2>Read Users</h2>
+  <button onclick="readUser()">Read All Users (Check Console Dropdowns)</button>
+
+  <h3>Read One User by ID</h3>
+  <input type="text" id="read-id" placeholder="User ID" />
+  <button onclick="readUserById(document.getElementById('read-id').value)">Read User</button>
+  <div id="read-result"></div>
+
+  <hr />
+
+  <h2>Delete User</h2>
+  <input type="text" id="delete-id" placeholder="User ID" />
+  <button onclick="deleteUserData(document.getElementById('delete-id').value)">Delete User</button>
+</body>
+</html>
