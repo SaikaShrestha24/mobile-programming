@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EV Charge App – Nepal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-green: #2ECC71;
+            --success-green: #27AE60;
+            --secondary-white: #FFFFFF;
+            --electric-blue: #3498DB;
+            --charcoal: #2C3E50;
+            --subheading-color: #34495E;
+            --body-text: #4A5568;
+            --caption-text: #718096;
+            --light-gray: #F5F7FA;
+            --warning-orange: #F39C12;
+            --error-red: #E74C3C;
+            --disabled-bg: #D1D5DB;
+            --disabled-text: #9CA3AF;
+            --spacing-s: 8px;
+            --spacing-m: 16px;
+            --spacing-l: 24px;
+            --spacing-xl: 32px;
+            --radius-btn: 12px;
+            --radius-card: 16px;
+            --shadow: 0 10px 20px rgba(0,0,0,0.08);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
+
+        body { background-color: var(--light-gray); color: var(--body-text); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+
+        .phone-container { width: 100%; max-width: 412px; height: 892px; background-color: var(--secondary-white); border-radius: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); position: relative; overflow: hidden; display: flex; flex-direction: column; border: 8px solid #000; }
+
+        .status-bar { height: 44px; background-color: var(--secondary-white); display: flex; justify-content: space-between; align-items: center; padding: 0 var(--spacing-l); font-size: 14px; font-weight: 600; color: var(--charcoal); z-index: 10; }
+        .status-bar .notch { width: 110px; height: 30px; background-color: #000; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px; position: absolute; left: 50%; transform: translateX(-50%); top: 0; }
+
+        .app-content { flex: 1; overflow-y: auto; position: relative; padding-bottom: 80px; }
+
+        .screen { display: none; padding: var(--spacing-m); animation: fadeIn 0.3s ease-in-out; }
+        .screen.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        h1 { font-size: 28px; font-weight: 700; color: var(--charcoal); margin-bottom: var(--spacing-m); }
+        h2 { font-size: 20px; font-weight: 600; color: var(--subheading-color); margin-bottom: var(--spacing-s); }
+        .caption { font-size: 12px; font-weight: 400; color: var(--caption-text); }
+
+        .form-group { margin-bottom: var(--spacing-m); }
+        .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: var(--spacing-s); color: var(--subheading-color); }
+        .form-control { width: 100%; padding: var(--spacing-m); border: 1px solid var(--disabled-bg); border-radius: var(--radius-btn); font-size: 16px; background-color: var(--light-gray); outline: none; transition: border-color 0.2s; }
+        .form-control:focus { border-color: var(--primary-green); }
+
+        select.form-control { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23718096' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; background-size: 14px; padding-right: 40px; cursor: pointer; }
+
+        .btn-primary { width: 100%; background-color: var(--primary-green); color: var(--secondary-white); padding: var(--spacing-m); border: none; border-radius: var(--radius-btn); font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: var(--shadow); transition: transform 0.1s ease; }
+        .btn-primary:active { transform: scale(0.95); }
+        .btn-primary:disabled { cursor: not-allowed; opacity: 0.7; }
+
+        .btn-secondary { width: 100%; background-color: var(--secondary-white); color: var(--primary-green); border: 1px solid var(--primary-green); padding: var(--spacing-m); border-radius: var(--radius-btn); font-size: 16px; font-weight: 600; cursor: pointer; transition: transform 0.1s ease; }
+        .btn-secondary:active { transform: scale(0.95); }
+        .btn-secondary:disabled { cursor: not-allowed; opacity: 0.7; }
+
+        .btn-danger { width: 100%; background-color: var(--secondary-white); color: var(--error-red); border: 1px solid var(--error-red); padding: var(--spacing-m); border-radius: var(--radius-btn); font-size: 16px; font-weight: 600; cursor: pointer; transition: transform 0.1s ease; }
+        .btn-danger:active { transform: scale(0.95); }
+
+        .card { background-color: var(--secondary-white); border-radius: var(--radius-card); padding: var(--spacing-m); box-shadow: var(--shadow); margin-bottom: var(--spacing-m); border: 1px solid rgba(0,0,0,0.02); }
+
+        .bottom-nav { position: absolute; bottom: 0; left: 0; width: 100%; height: 75px; background-color: var(--secondary-white); display: flex; border-top: 1px solid rgba(0,0,0,0.05); z-index: 100; }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--caption-text); cursor: pointer; font-size: 11px; gap: 4px; }
+        .nav-item i { font-size: 20px; }
+        .nav-item.active { color: var(--primary-green); }
+
+        .map-canvas { width: 100%; height: 300px; background-color: #e5e9f0; border-radius: var(--radius-card); position: relative; overflow: hidden; margin-bottom: var(--spacing-m); }
+        .map-pin { position: absolute; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: transform 0.15s; }
+        .map-pin:hover { transform: scale(1.15); }
+        .pin-user { background-color: var(--electric-blue); top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .pin-available { background-color: var(--primary-green); top: 28%; left: 35%; }
+        .pin-available2 { background-color: var(--primary-green); top: 55%; left: 65%; }
+        .pin-busy { background-color: var(--warning-orange); top: 38%; left: 72%; }
+        .pin-offline { background-color: var(--error-red); top: 68%; left: 22%; }
+
+        .filter-container { display: flex; gap: var(--spacing-s); margin-bottom: var(--spacing-m); overflow-x: auto; padding-bottom: 4px; }
+        .filter-pill { padding: 6px 14px; border-radius: 20px; background-color: var(--light-gray); font-size: 13px; font-weight: 600; white-space: nowrap; cursor: pointer; border: 1px solid transparent; }
+        .filter-pill.active { background-color: #E8F8F0; color: var(--success-green); border-color: var(--primary-green); }
+
+        .flex-row-justify { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-s); }
+        .hidden { display: none !important; }
+        .badge { padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; color: white; }
+        .bg-avail { background-color: var(--primary-green); }
+        .bg-busy { background-color: var(--warning-orange); }
+        .bg-off { background-color: var(--error-red); }
+
+        /* Time slot grid */
+        .time-slots-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: var(--spacing-s); }
+        .time-slot { padding: 10px 6px; border-radius: 10px; border: 1.5px solid var(--disabled-bg); font-size: 13px; font-weight: 600; text-align: center; cursor: pointer; transition: all 0.15s; color: var(--body-text); background: var(--secondary-white); }
+        .time-slot.selected { background-color: #E8F8F0; border-color: var(--primary-green); color: var(--success-green); }
+        .time-slot.booked { background-color: var(--light-gray); color: var(--disabled-text); border-color: var(--disabled-bg); cursor: not-allowed; text-decoration: line-through; }
+
+        /* Booking confirmation card */
+        .booking-confirm-icon { width: 64px; height: 64px; background: #E8F8F0; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--spacing-m); color: var(--primary-green); font-size: 28px; }
+
+        /* My bookings list */
+        .booking-item { border-left: 4px solid var(--primary-green); padding-left: var(--spacing-m); margin-bottom: var(--spacing-m); }
+        .booking-item.cancelled { border-color: var(--error-red); }
+        .booking-item.past { border-color: var(--disabled-bg); opacity: 0.7; }
+
+        /* Step indicator */
+        .step-indicator { display: flex; align-items: center; gap: 8px; margin-bottom: var(--spacing-l); }
+        .step-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
+        .step-dot.done { background: var(--primary-green); color: white; }
+        .step-dot.active { background: var(--charcoal); color: white; }
+        .step-dot.pending { background: var(--light-gray); color: var(--caption-text); }
+        .step-line { flex: 1; height: 2px; background: var(--disabled-bg); }
+        .step-line.done { background: var(--primary-green); }
+
+        /* Switch */
+        .switch-group { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-m); }
+        .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--disabled-bg); transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--primary-green); }
+        input:checked + .slider:before { transform: translateX(24px); }
+
+        /* Nepal flag accent strip */
+        .nepal-accent { height: 4px; background: linear-gradient(90deg, #003087 0%, #dc143c 100%); border-radius: 2px; margin-bottom: var(--spacing-m); }
+    </style>
+</head>
+<body>
+<div class="phone-container">
+    <div class="status-bar">
+        <span id="status-time">05:46</span>
+        <div class="notch"></div>
+        <div>
+            <i class="fa-solid fa-signal" aria-hidden="true"></i>
+            <i class="fa-solid fa-wifi"></i>
+            <i class="fa-solid fa-battery-three-quarters"></i>
+        </div>
+    </div>
+
+    <div class="app-content">
+
+        <!-- AUTH SCREEN -->
+        <div id="screen-auth" class="screen active">
+            <div style="text-align:center; margin-top:var(--spacing-xl); margin-bottom:var(--spacing-xl);">
+                <i class="fa-solid fa-charging-station" style="font-size:64px; color:var(--primary-green);"></i>
+                <h1 style="margin-top:var(--spacing-m);">EV Charge Nepal</h1>
+                <p class="caption">Smart EV Slot Booking Across Nepal 🇳🇵</p>
+            </div>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="auth-email" class="form-control" placeholder="ram.sharma@email.com" value="ram.sharma@email.com">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="auth-password" class="form-control" placeholder="••••••••" value="password123">
+            </div>
+            <button id="btn-login" class="btn-primary" style="margin-top:var(--spacing-m);">Sign In</button>
+            <button id="btn-register" class="btn-secondary" style="margin-top:var(--spacing-m);">Create Account</button>
+        </div>
+
+        <!-- MAP SCREEN -->
+        <div id="screen-map" class="screen">
+            <h1>Find Chargers</h1>
+            <div class="nepal-accent"></div>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="🔍 Search stations in Nepal...">
+            </div>
+            <div class="map-canvas">
+                <div style="width:100%;height:100%;background:radial-gradient(circle,#e2e8f0 10%,transparent 11%);background-size:20px 20px;position:absolute;"></div>
+                <!-- Simple Nepal-ish roads suggestion -->
+                <svg style="position:absolute;width:100%;height:100%;opacity:0.15;" viewBox="0 0 400 300">
+                    <line x1="0" y1="150" x2="400" y2="150" stroke="#94a3b8" stroke-width="3"/>
+                    <line x1="200" y1="0" x2="200" y2="300" stroke="#94a3b8" stroke-width="2"/>
+                    <line x1="0" y1="80" x2="400" y2="200" stroke="#94a3b8" stroke-width="1.5"/>
+                </svg>
+                <div class="map-pin pin-user"><i class="fa-solid fa-car"></i></div>
+                <div class="map-pin pin-available" onclick="app.showStationDetail('stat_1')"><i class="fa-solid fa-bolt"></i></div>
+                <div class="map-pin pin-available2" onclick="app.showStationDetail('stat_4')"><i class="fa-solid fa-bolt"></i></div>
+                <div class="map-pin pin-busy" onclick="app.showStationDetail('stat_2')"><i class="fa-solid fa-bolt"></i></div>
+                <div class="map-pin pin-offline" onclick="app.showStationDetail('stat_3')"><i class="fa-solid fa-bolt"></i></div>
+            </div>
+            <h2>Quick Overview</h2>
+            <div class="card flex-row-justify" onclick="app.switchTab('stations')" style="cursor:pointer;">
+                <div>
+                    <p style="font-weight:600;">8 Stations found nearby</p>
+                    <p class="caption">Kathmandu Valley, Nepal</p>
+                </div>
+                <i class="fa-solid fa-chevron-right" style="color:var(--caption-text);"></i>
+            </div>
+        </div>
+
+        <!-- STATIONS LIST -->
+        <div id="screen-stations" class="screen">
+            <h1>Stations</h1>
+            <div class="nepal-accent"></div>
+            <div class="filter-container">
+                <div class="filter-pill active">All</div>
+                <div class="filter-pill">⚡ Available</div>
+                <div class="filter-pill">🟠 Busy</div>
+            </div>
+            <div id="stations-list-container"></div>
+        </div>
+
+        <!-- STATION DETAIL -->
+        <div id="screen-station-detail" class="screen">
+            <div style="display:flex;align-items:center;margin-bottom:var(--spacing-m);">
+                <i class="fa-solid fa-arrow-left" style="font-size:20px;cursor:pointer;margin-right:var(--spacing-m);" onclick="app.switchTab('stations')"></i>
+                <h1 id="detail-name" style="margin-bottom:0;">Station Details</h1>
+            </div>
+            <div class="card">
+                <div class="flex-row-justify">
+                    <span id="detail-status" class="badge">Available</span>
+                    <span style="font-weight:600;color:var(--warning-orange);"><i class="fa-solid fa-star"></i> <span id="detail-rating">4.7</span></span>
+                </div>
+                <p id="detail-address" style="margin:var(--spacing-s) 0;font-weight:600;"></p>
+                <p class="caption" id="detail-district" style="margin-bottom:4px;"></p>
+                <p class="caption" id="detail-specs" style="margin-bottom:var(--spacing-m);"></p>
+                <div class="flex-row-justify" style="border-top:1px solid var(--light-gray);padding-top:var(--spacing-m);">
+                    <div>
+                        <p class="caption">Rate</p>
+                        <p style="font-weight:700;color:var(--charcoal);" id="detail-price">रू 15/kWh</p>
+                    </div>
+                    <div>
+                        <p class="caption">Max Power</p>
+                        <p style="font-weight:700;color:var(--electric-blue);" id="detail-power">150 kW</p>
+                    </div>
+                    <div>
+                        <p class="caption">Connector</p>
+                        <p style="font-weight:700;color:var(--charcoal);" id="detail-connector">CCS2</p>
+                    </div>
+                </div>
+            </div>
+            <button id="btn-book-slot" class="btn-primary" style="margin-top:var(--spacing-m);">Book a Slot</button>
+        </div>
+
+        <!-- BOOKING SCREEN (Step 1: pick date & slot) -->
+        <div id="screen-booking" class="screen">
+            <div style="display:flex;align-items:center;margin-bottom:var(--spacing-m);">
+                <i class="fa-solid fa-arrow-left" style="font-size:20px;cursor:pointer;margin-right:var(--spacing-m);" onclick="app.switchTab('station-detail')"></i>
+                <h1 style="margin-bottom:0;">Book Slot</h1>
+            </div>
+
+            <!-- Step indicator -->
+            <div class="step-indicator">
+                <div class="step-dot active" id="step1-dot">1</div>
+                <div class="step-line" id="step1-line"></div>
+                <div class="step-dot pending" id="step2-dot">2</div>
+                <div class="step-line"></div>
+                <div class="step-dot pending" id="step3-dot">✓</div>
+            </div>
+
+            <div class="card" id="booking-station-summary" style="background:var(--light-gray);box-shadow:none;border:1px solid var(--disabled-bg);">
+                <p style="font-weight:700;font-size:14px;" id="booking-station-name">GreenCharge Thamel</p>
+                <p class="caption" id="booking-station-addr">Thamel, Kathmandu</p>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fa-solid fa-calendar-day" style="color:var(--primary-green);margin-right:6px;"></i>Select Date</label>
+                <input type="date" id="booking-date" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label><i class="fa-solid fa-clock" style="color:var(--primary-green);margin-right:6px;"></i>Select Duration</label>
+                <select id="booking-duration" class="form-control">
+                    <option value="1">1 Hour</option>
+                    <option value="2" selected>2 Hours</option>
+                    <option value="3">3 Hours</option>
+                    <option value="4">4 Hours</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fa-solid fa-bolt" style="color:var(--primary-green);margin-right:6px;"></i>Available Time Slots</label>
+                <p class="caption" style="margin-bottom:8px;">NPT (Nepal Standard Time, UTC+5:45)</p>
+                <div class="time-slots-grid" id="time-slots-grid">
+                    <!-- populated by JS -->
+                </div>
+            </div>
+
+            <button id="btn-confirm-slot" class="btn-primary" disabled>Select a time slot to continue</button>
+        </div>
+
+        <!-- BOOKING CONFIRMATION SCREEN (Step 2: vehicle & confirm) -->
+        <div id="screen-booking-confirm" class="screen">
+            <div style="display:flex;align-items:center;margin-bottom:var(--spacing-m);">
+                <i class="fa-solid fa-arrow-left" style="font-size:20px;cursor:pointer;margin-right:var(--spacing-m);" onclick="app.switchTab('booking')"></i>
+                <h1 style="margin-bottom:0;">Confirm Booking</h1>
+            </div>
+
+            <div class="step-indicator">
+                <div class="step-dot done">✓</div>
+                <div class="step-line done"></div>
+                <div class="step-dot active">2</div>
+                <div class="step-line"></div>
+                <div class="step-dot pending">✓</div>
+            </div>
+
+            <div class="card">
+                <p style="font-weight:700;font-size:15px;margin-bottom:var(--spacing-s);">Booking Summary</p>
+                <div class="flex-row-justify"><p class="caption">Station</p><p style="font-weight:600;font-size:14px;text-align:right;max-width:200px;" id="confirm-station">—</p></div>
+                <div class="flex-row-justify"><p class="caption">Date</p><p style="font-weight:600;font-size:14px;" id="confirm-date">—</p></div>
+                <div class="flex-row-justify"><p class="caption">Time Slot</p><p style="font-weight:600;font-size:14px;color:var(--electric-blue);" id="confirm-time">—</p></div>
+                <div class="flex-row-justify"><p class="caption">Duration</p><p style="font-weight:600;font-size:14px;" id="confirm-duration">—</p></div>
+                <div class="flex-row-justify" style="border-top:1px solid var(--light-gray);padding-top:var(--spacing-s);margin-top:var(--spacing-s);">
+                    <p class="caption">Estimated Cost</p>
+                    <p style="font-weight:700;font-size:16px;color:var(--success-green);" id="confirm-cost">—</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fa-solid fa-car" style="color:var(--primary-green);margin-right:6px;"></i>Vehicle</label>
+                <select id="booking-vehicle" class="form-control">
+                    <option value="tesla">Tesla Model 3 (2024)</option>
+                    <option value="byd">BYD Atto 3</option>
+                    <option value="kia">Kia EV6</option>
+                    <option value="nexon">Tata Nexon EV</option>
+                    <option value="other">Other EV</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fa-solid fa-id-card" style="color:var(--primary-green);margin-right:6px;"></i>Vehicle Number</label>
+                <input type="text" id="booking-vehicle-num" class="form-control" placeholder="e.g. Ba 1 Cha 2345">
+            </div>
+
+            <div class="form-group">
+                <label><i class="fa-solid fa-phone" style="color:var(--primary-green);margin-right:6px;"></i>Contact Number</label>
+                <input type="tel" id="booking-phone" class="form-control" placeholder="98XXXXXXXX">
+            </div>
+
+            <button id="btn-finalize-booking" class="btn-primary">Confirm Booking — Pay at Station</button>
+        </div>
+
+        <!-- BOOKING SUCCESS -->
+        <div id="screen-booking-success" class="screen">
+            <div style="text-align:center;padding:var(--spacing-xl) 0;">
+                <div class="booking-confirm-icon">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <h1 style="color:var(--success-green);">Slot Booked!</h1>
+                <p style="color:var(--body-text);margin-bottom:var(--spacing-l);">Your charging slot has been reserved successfully.</p>
+            </div>
+
+            <div class="card" style="border:2px solid var(--primary-green);">
+                <div style="text-align:center;margin-bottom:var(--spacing-m);">
+                    <p class="caption">Booking Reference</p>
+                    <p style="font-size:22px;font-weight:700;color:var(--charcoal);letter-spacing:2px;" id="success-ref">EV-00000</p>
+                </div>
+                <div class="flex-row-justify"><p class="caption">Station</p><p style="font-weight:600;font-size:13px;text-align:right;max-width:180px;" id="success-station">—</p></div>
+                <div class="flex-row-justify"><p class="caption">Date</p><p style="font-weight:600;font-size:13px;" id="success-date">—</p></div>
+                <div class="flex-row-justify"><p class="caption">Time</p><p style="font-weight:600;font-size:13px;color:var(--electric-blue);" id="success-time">—</p></div>
+                <div class="flex-row-justify"><p class="caption">Duration</p><p style="font-weight:600;font-size:13px;" id="success-duration">—</p></div>
+                <div class="flex-row-justify"><p class="caption">Vehicle</p><p style="font-weight:600;font-size:13px;" id="success-vehicle">—</p></div>
+                <div class="flex-row-justify" style="border-top:1px solid var(--light-gray);padding-top:var(--spacing-s);margin-top:var(--spacing-s);">
+                    <p class="caption">Est. Cost</p>
+                    <p style="font-weight:700;color:var(--success-green);" id="success-cost">—</p>
+                </div>
+            </div>
+
+            <p class="caption" style="text-align:center;margin-bottom:var(--spacing-m);">
+                <i class="fa-solid fa-circle-info" style="color:var(--electric-blue);"></i>
+                Please arrive 5 minutes before your slot. Payment at station (cash / QR).
+            </p>
+            <button class="btn-primary" onclick="app.switchTab('activity')">View My Bookings</button>
+            <button class="btn-secondary" style="margin-top:var(--spacing-s);" onclick="app.switchTab('map')">Back to Map</button>
+        </div>
+
+        <!-- ACTIVITY / MY BOOKINGS -->
+        <div id="screen-activity" class="screen">
+            <h1>My Bookings</h1>
+            <div class="nepal-accent"></div>
+            <div id="bookings-list-container">
+                <div style="text-align:center;padding:var(--spacing-xl) 0;color:var(--caption-text);">
+                    <i class="fa-solid fa-calendar-xmark" style="font-size:48px;margin-bottom:var(--spacing-m);"></i>
+                    <p style="font-weight:600;">No bookings yet</p>
+                    <p class="caption">Book a charging slot from the Stations tab</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROFILE SCREEN -->
+        <div id="screen-profile" class="screen">
+            <h1>Profile</h1>
+            <div class="nepal-accent"></div>
+            <div class="card" style="text-align:center;">
+                <div style="width:70px;height:70px;background:#E8F8F0;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto var(--spacing-s);color:var(--primary-green);font-size:28px;">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <h2 id="profile-name" style="margin-bottom:2px;">Ram Sharma</h2>
+                <p class="caption" id="profile-email" style="margin-bottom:var(--spacing-m);">ram.sharma@email.com</p>
+                <div style="display:flex;justify-content:space-around;border-top:1px solid var(--light-gray);padding-top:var(--spacing-m);">
+                    <div><p style="font-weight:700;" id="profile-sessions">0</p><p class="caption">Bookings</p></div>
+                    <div><p style="font-weight:700;">Kathmandu</p><p class="caption">City</p></div>
+                    <div><p style="font-weight:700;color:var(--success-green);" id="profile-saved">रू 0</p><p class="caption">Saved</p></div>
+                </div>
+            </div>
+
+            <h2>Vehicle Details</h2>
+            <div class="card">
+                <div class="flex-row-justify"><p class="caption">Model</p><p style="font-weight:600;">Tesla Model 3 (2024)</p></div>
+                <div class="flex-row-justify" style="margin-top:var(--spacing-s);"><p class="caption">Battery</p><p style="font-weight:600;">75 kWh (~340 mi)</p></div>
+                <div class="flex-row-justify" style="margin-top:var(--spacing-s);"><p class="caption">Vehicle No.</p><p style="font-weight:600;">Ba 1 Cha 2345</p></div>
+            </div>
+
+            <h2>Preferences</h2>
+            <div class="card">
+                <div class="switch-group">
+                    <div><p style="font-weight:600;font-size:14px;">Booking Reminders</p><p class="caption">30 min before your slot</p></div>
+                    <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+                </div>
+                <div class="switch-group" style="margin-bottom:0;">
+                    <div><p style="font-weight:600;font-size:14px;">Show NPR Pricing</p><p class="caption">Display costs in रू</p></div>
+                    <label class="switch"><input type="checkbox" id="pref-npr" checked><span class="slider"></span></label>
+                </div>
+            </div>
+
+            <button id="btn-logout" class="btn-secondary" style="margin-top:var(--spacing-s);">Sign Out</button>
+        </div>
+
+    </div>
+
+    <div class="bottom-nav hidden" id="global-nav-bar">
+        <div class="nav-item active" onclick="app.switchTab('map')" id="tab-map">
+            <i class="fa-solid fa-map"></i><span>Map</span>
+        </div>
+        <div class="nav-item" onclick="app.switchTab('stations')" id="tab-stations">
+            <i class="fa-solid fa-charging-station"></i><span>Stations</span>
+        </div>
+        <div class="nav-item" onclick="app.switchTab('activity')" id="tab-activity">
+            <i class="fa-solid fa-calendar-check"></i><span>Bookings</span>
+        </div>
+        <div class="nav-item" onclick="app.switchTab('profile')" id="tab-profile">
+            <i class="fa-solid fa-user-gear"></i><span>Profile</span>
+        </div>
+    </div>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Firebase Contact Form</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    input, textarea {
+      display: block;
+      margin: 6px 0;
+      padding: 8px;
+      width: 320px;
+    }
+
+    button {
+      padding: 8px 12px;
+      margin: 5px 0;
+      cursor: pointer;
+    }
+
+    textarea {
+      height: 80px;
+    }
+
+    hr {
+      margin: 20px 0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Firebase Contact Form CRUD (10 Fields)</h1>
+
+  <!-- CREATE CONTACT -->
+  <h2>Create Contact</h2>
+
+  <input type="text" id="id" placeholder="Contact ID (e.g. 101)" />
+
+  <input type="text" id="name" placeholder="Full Name" />
+  <input type="email" id="email" placeholder="Email" />
+  <input type="text" id="phone" placeholder="Phone" />
+  <input type="text" id="subject" placeholder="Subject" />
+  <input type="text" id="address" placeholder="Address" />
+  <input type="text" id="city" placeholder="City" />
+  <input type="text" id="country" placeholder="Country" />
+  <input type="text" id="postal" placeholder="Postal Code" />
+  <input type="text" id="gender" placeholder="Gender" />
+
+  <textarea id="message" placeholder="Message"></textarea>
+
+  <button onclick="writeContact()">Save Contact</button>
+
+  <hr>
+
+  <!-- READ ALL -->
+  <h2>Read Contacts</h2>
+  <button onclick="readContacts()">Read All (Check Console)</button>
+
+  <!-- READ BY ID -->
+  <h3>Read Contact by ID</h3>
+  <input type="text" id="read-id" placeholder="Enter Contact ID" />
+  <button onclick="readContactById(document.getElementById('read-id').value)">
+    Get Contact
+  </button>
+
+  <p id="result"></p>
+
+  <hr>
+
+  <!-- UPDATE -->
+  <h2>Update Contact</h2>
+
+  <input type="text" id="update-id" placeholder="Contact ID" />
+  <button onclick="fetchForUpdate(document.getElementById('update-id').value)">
+    Load Data
+  </button>
+
+  <input type="text" id="u-name" placeholder="Updated Name" />
+  <input type="email" id="u-email" placeholder="Updated Email" />
+
+  <button onclick="updateContact(document.getElementById('update-id').value)">
+    Update Contact
+  </button>
+
+  <hr>
+
+  <!-- DELETE -->
+  <h2>Delete Contact</h2>
+
+  <input type="text" id="delete-id" placeholder="Contact ID" />
+
+  <button onclick="deleteContact(document.getElementById('delete-id').value)">
+    Delete Contact
+  </button>
+
+  <!-- JS FILE -->
+  <script type="module" src="contact.js"></script>
+
+</body>
+</html>
